@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERO | Animations</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for WhatsApp icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Entrance Animation -->
+    <div id="entrance-screen">
+        <h1 class="logo-animation">AERO</h1>
+        <p class="subtitle-animation">Creative Animations</p>
+    </div>
+
+    <!-- Expired/Direct Overlay -->
+    <div id="status-overlay" class="hidden">
+        <div class="overlay-content">
+            <h1 id="status-title">Erişim Süresi Doldu</h1>
+            <p id="status-subtitle">Bu animasyonun linkinin geçerlilik süresi (24 saat) sona ermiştir. Yeni bir link için lütfen iletişime geçin.</p>
+            <a href="https://wa.me/905387728696?text=Merhabalar,%20suresi%20dolan%20animasyon%20icin%20yeni%20bir%20link%20istiyorum." class="wa-btn secondary">
+                <i class="fab fa-whatsapp"></i> Satıcıyla İletişime Geç
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="main-content" class="hidden">
+        <header>
+            <h1 id="header-logo-text" class="header-logo">AERO</h1>
+        </header>
+
+        <div id="gallery-container" class="gallery">
+            <!-- Dynamic Animations go here -->
+        </div>
+    </main>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
