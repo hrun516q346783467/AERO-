@@ -37,7 +37,14 @@
             <!-- Dynamic Animations go here -->
         </div>
     </main>
-    <script src="config.js"></script>
+    <script>
+        // Cache-busting loader for config.js
+        (function() {
+            const script = document.createElement('script');
+            script.src = 'config.js?v=' + Date.now();
+            document.head.appendChild(script);
+        })();
+    </script>
     <script src="script.js"></script>
 </body>
 </html>

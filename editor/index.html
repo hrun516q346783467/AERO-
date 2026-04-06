@@ -3,69 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERO Düzenleyici</title>
+    <title>AERO | Düzenleyici</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- Login Overlay -->
     <div id="login-overlay">
         <div class="login-card">
-            <i class="fas fa-lock login-lock"></i>
-            <h2>AERO DÜZENLEYİCİ</h2>
-            <p>Lütfen devam etmek için giriş anahtarını girin.</p>
+            <div class="login-lock"><i class="fas fa-microchip"></i></div>
+            <h2>AERO Editor 2.0</h2>
+            <p>Devam etmek için cihaz anahtarınızı girin.</p>
             <div class="login-form">
-                <input type="password" id="login-password" placeholder="Giriş Anahtarı...">
-                <button id="login-btn" class="btn primary full-width">Giriş Yap</button>
+                <input type="password" id="login-password" placeholder="Giriş Anahtarı" autofocus>
+                <button id="login-btn" class="btn primary full-width">
+                    <i class="fas fa-unlock"></i> Oturumu Başlat
+                </button>
+                <div id="login-error" class="error-text hidden">Hata: Geçersiz Anahtar!</div>
             </div>
-            <p id="login-error" class="error-text hidden">Geçersiz anahtar! Lütfen tekrar deneyin.</p>
         </div>
     </div>
 
-    <button id="menu-toggle" class="menu-toggle">
-        <i class="fas fa-bars"></i>
-    </button>
-
+    <!-- Main Container -->
     <div class="editor-container hidden-editor">
+        <!-- Mobile Toggle -->
+        <button id="menu-toggle" class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h1>AERO <span>Editor</span></h1>
-                <p class="subtitle-text">Cloud Sync (Beta)</p>
+                <h1>AERO<span>EDITOR</span></h1>
                 <div class="admin-key-container">
-                    <label>Giriş Anahtarı</label>
-                    <input type="password" id="admin-key-input" placeholder="••••••••">
+                    <label>Bulut Sunucu Anahtarı</label>
+                    <input type="password" id="admin-key-input" placeholder="ANAHTAR">
                 </div>
             </div>
-            <nav class="anim-list-container">
-                <div class="section-title">Animasyonlar</div>
+
+            <div class="anim-list-container">
+                <div class="section-title">Kayıtlı Animasyonlar</div>
                 <ul id="anim-list">
-                    <!-- List items here -->
+                    <!-- Dynamic List -->
                 </ul>
-                <button id="add-anim-btn" class="btn primary">
+                <button id="add-anim-btn" class="btn success full-width" style="margin-top: 1rem;">
                     <i class="fas fa-plus"></i> Yeni Ekle
                 </button>
-            </nav>
+            </div>
+
             <div class="sidebar-footer">
                 <button id="save-all-btn" class="btn primary full-width">
-                    <i class="fas fa-magic"></i> Değişiklikleri Uygula
+                    <i class="fas fa-cloud-upload-alt"></i> Buluta Kaydet
                 </button>
-                <button id="export-file-btn" class="btn success full-width" style="margin-top: 0.8rem;">
-                    <i class="fas fa-file-export"></i> Dosyayı Güncelle (config.js)
+                <button id="export-file-btn" class="btn danger full-width">
+                    <i class="fas fa-download"></i> Yedek İndir (.js)
                 </button>
             </div>
         </aside>
 
+        <!-- Main Workspace -->
         <main class="editor-main">
-            <section id="welcome-screen" class="editor-view">
-                <div class="welcome-content">
-                    <i class="fas fa-magic welcome-icon"></i>
-                    <h2>AERO Düzenleyici'ye Hoş Geldiniz</h2>
-                    <p>Soldaki listeden bir animasyon seçin veya yenisini oluşturun.</p>
-                </div>
-            </section>
+            <!-- Initial State -->
+            <div id="welcome-screen" class="welcome-content">
+                <i class="fas fa-wand-magic-sparkles welcome-icon"></i>
+                <h2>Düzenlemeye Başlayın</h2>
+                <p>Sol menüden bir animasyon seçin veya yenisini oluşturun.</p>
+            </div>
 
-            <section id="edit-view" class="editor-view hidden">
+            <!-- Edit View -->
+            <div id="edit-view" class="editor-view hidden">
+                <div class="status-badge online">
+                    <div class="status-dot"></div>
+                    <span>Senkronizasyon Hazır</span>
+                </div>
+
                 <div class="view-header">
                     <h2 id="edit-title-display">Animasyon Düzenle</h2>
                     <button id="delete-anim-btn" class="btn danger">
@@ -74,67 +85,54 @@
                 </div>
 
                 <div class="edit-grid">
-                    <div class="edit-forms">
-                        <div class="form-group">
-                            <label>Animasyon Adı (ID)</label>
-                            <input type="text" id="anim-id" placeholder="örn: ANM6">
+                    <!-- Form Side -->
+                    <div class="form-card">
+                        <div class="input-row">
+                            <div class="form-group">
+                                <label>Kod/ID</label>
+                                <input type="text" id="anim-id" placeholder="Örn: ANM6">
+                            </div>
+                            <div class="form-group">
+                                <label>Başlık</label>
+                                <input type="text" id="anim-title" placeholder="Örn: Kalp Atışı">
+                            </div>
                         </div>
+
                         <div class="form-group">
-                            <label>Başlık</label>
-                            <input type="text" id="anim-title" placeholder="örn: Yeni Animasyon">
+                            <label>Fiyat (₺)</label>
+                            <input type="text" id="anim-price" placeholder="Örn: 49.99">
                         </div>
+
                         <div class="form-group">
-                            <label>Fiyat ($)</label>
-                            <input type="text" id="anim-price" placeholder="örn: 29.99">
+                            <label>HTML Yapısı</label>
+                            <textarea id="anim-html" placeholder="<div class='box'></div>"></textarea>
                         </div>
+
                         <div class="form-group">
-                            <label>HTML İçeriği</label>
-                            <textarea id="anim-html" placeholder='<div class="my-box"></div>'></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Özel CSS (Opsiyonel)</label>
-                            <textarea id="anim-css" placeholder=".anm-new .my-box { ... }"></textarea>
+                            <label>CSS Stilleri</label>
+                            <textarea id="anim-css" placeholder=".box { width: 100px; ... }"></textarea>
                         </div>
                     </div>
 
+                    <!-- Preview Side -->
                     <div class="preview-pane">
-                        <label>Canlı Önizleme</label>
                         <div class="preview-window">
-                            <iframe id="preview-frame" style="width: 100%; height: 100%; border: none; background: #020617;"></iframe>
+                            <iframe id="preview-frame"></iframe>
                         </div>
                         <div class="preview-controls">
-                            <p class="hint">Değişiklikler anlık olarak burada görünür.</p>
+                            <div class="live-link-box">
+                                <i class="fas fa-external-link-alt"></i>
+                                <a href="../index.html" target="_blank" rel="noopener">Canlı Siteyi Yeni Sekmede Aç</a>
+                            </div>
+                            <div class="hint">
+                                <i class="fas fa-info-circle"></i> Değişiklikler sol tarafta anlık olarak önizlenir.
+                            </div>
                         </div>
                     </div>
                 </div>
-            </section>
-
-            <section id="settings-view" class="editor-view hidden">
-                <h2>Genel Site Ayarları</h2>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Site Başlığı (Tab)</label>
-                        <input type="text" id="site-title">
-                    </div>
-                    <div class="form-group">
-                        <label>WhatsApp Numarası</label>
-                        <input type="text" id="wa-number">
-                    </div>
-                    <div class="form-group">
-                        <label>Giriş Logosu</label>
-                        <input type="text" id="entrance-logo">
-                    </div>
-                    <div class="form-group">
-                        <label>Giriş Alt Başlığı</label>
-                        <input type="text" id="entrance-subtitle">
-                    </div>
-                </div>
-            </section>
+            </div>
         </main>
     </div>
-
-    <!-- Hidden Style Tag for Preview -->
-    <style id="preview-styles"></style>
 
     <div id="toast-container"></div>
 
