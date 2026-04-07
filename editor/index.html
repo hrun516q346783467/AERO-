@@ -136,7 +136,18 @@
 
     <div id="toast-container"></div>
 
-    <script src="../config.js"></script>
-    <script src="script.js"></script>
+    <script>
+        // Cache-busting: sunucudan her zaman en güncel config.js'i yükle
+        (function() {
+            const s = document.createElement('script');
+            s.src = '../config.js?v=' + Date.now();
+            s.onload = function() {
+                const main = document.createElement('script');
+                main.src = 'script.js?v=' + Date.now();
+                document.head.appendChild(main);
+            };
+            document.head.appendChild(s);
+        })();
+    </script>
 </body>
 </html>

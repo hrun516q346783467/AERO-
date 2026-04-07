@@ -84,17 +84,50 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function saveToLocalStorage() {
-        localStorage.setItem('aero_config_backup', JSON.stringify(config));
+        // Her kayıtta timestamp ekle — ne zaman kaydedildiğini bileceğiz
+        const backup = {
+            timestamp: Date.now(),
+            data: config
+        };
+        localStorage.setItem('aero_editor_backup', JSON.stringify(backup));
+        // Eski key'i temizle (eski formattan geçiş)
+        localStorage.removeItem('aero_config_backup');
     }
 
     function loadFromLocalStorage() {
-        const backup = localStorage.getItem('aero_config_backup');
-        if (backup) {
-            try {
-                config = JSON.parse(backup);
-            } catch (e) {
-                console.error("Local storage error", e);
-            }
+        // ÖNCE sunucu verisini (window.AERO_CONFIG) kullan — asla ezeriz
+        // LocalStorage sadece sunucu erişilememişse veya kullanıcı değişiklik yapmışsa kullanılır
+        const serverConfig = window.AERO_CONFIG;
+        const backupRaw = localStorage.getItem('aero_editor_backup');
+
+        if (!backupRaw) {
+            // Yedek yok, sunucu verisini kullan
+            config = serverConfig;
+            return;
+        }
+
+        let backup;
+        try { backup = JSON.parse(backupRaw); } catch(e) {
+            // Yedek bozuksa sunucu verisini kullan
+            config = serverConfig;
+            return;
+        }
+
+        // Sunucu config.js'i ne zaman deploy edildi bilmiyoruz,
+        // bu yüzden şu politikayı izliyoruz:
+        // Kullanıcı yedeği varsa ve sunucu verisiyle animasyon sayısı eşleşiyorsa → yedeği kullan
+        // Ancak sunucuda YENİ animasyon eklendiyse (sayısı fazlaysa) → sunucuyu kullan
+        const serverAnimCount = serverConfig ? serverConfig.animations.length : 0;
+        const backupAnimCount = backup.data ? backup.data.animations.length : 0;
+
+        if (backupAnimCount >= serverAnimCount) {
+            // Yedek daha kapsamlı veya eşit — kullanıcının yaptığı değişiklikler var
+            config = backup.data;
+        } else {
+            // Sunucu daha fazla animasyon içeriyor — sunucu verisi daha güncel
+            config = serverConfig;
+            // Eskiyi sil
+            localStorage.removeItem('aero_editor_backup');
         }
     }
 

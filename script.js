@@ -1,11 +1,25 @@
 const startAero = () => {
-    // 1. Load config: localStorage first (editor real-time sync), then config.js
+    // Sunucu verisini her zaman önce al
     let config = window.AERO_CONFIG;
-    const backup = localStorage.getItem('aero_config_backup');
-    if (backup) {
-        try { config = JSON.parse(backup); } catch(e) { /* use config.js */ }
-    }
     
+    // LocalStorage'dan yedek al (sadece sunucu erişilemezse veya yedek daha günceldir)
+    const backupRaw = localStorage.getItem('aero_editor_backup');
+    if (backupRaw) {
+        try {
+            const backup = JSON.parse(backupRaw);
+            if (backup && backup.data) {
+                // Sunucu verisi yoksa yedeği kullan
+                if (!config) {
+                    config = backup.data;
+                }
+                // Sunucu verisi varsa ama yedek daha fazla animasyon içeriyorsa (kullanıcı eklemişse) yedeği kullan
+                else if (backup.data.animations.length > config.animations.length) {
+                    config = backup.data;
+                }
+            }
+        } catch(e) { /* Bozuk yedek, sunucu verisini kullan */ }
+    }
+
     if (!config) {
         // Retry once after 100ms if config.js is still loading
         setTimeout(() => {
