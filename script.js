@@ -1,11 +1,22 @@
-document.addEventListener('DOMContentLoaded', () => {
+const startAero = () => {
     // 1. Load config: localStorage first (editor real-time sync), then config.js
     let config = window.AERO_CONFIG;
     const backup = localStorage.getItem('aero_config_backup');
     if (backup) {
         try { config = JSON.parse(backup); } catch(e) { /* use config.js */ }
     }
-    if (!config) { console.error('Config not found!'); return; }
+    
+    if (!config) {
+        // Retry once after 100ms if config.js is still loading
+        setTimeout(() => {
+            if (!window.AERO_CONFIG) {
+                console.error('CRITICAL: Config not found after retry!');
+            } else {
+                startAero();
+            }
+        }, 100);
+        return;
+    }
 
     // Elements
     const entranceScreen = document.getElementById('entrance-screen');
@@ -16,17 +27,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'aero_config_backup') window.location.reload();
     });
 
-    // Apply site settings (titles/logo only — theme CSS untouched)
+    // Apply site settings
     document.title = config.settings.siteTitle;
     document.querySelector('.logo-animation').innerText = config.settings.entrance.logo;
     document.querySelector('.subtitle-animation').innerText = config.settings.entrance.subtitle;
     document.getElementById('header-logo-text').innerText = config.settings.headerLogo;
 
-    // Render gallery with Shadow DOM isolation
+    // Render gallery
     const isAdmin = new URLSearchParams(window.location.search).get('admin') === 'aero';
     renderGallery(config.animations, config.settings.whatsappNumber, isAdmin);
 
-    // Link validation
+    // Link validation logic (anim/key params)
     const urlParams = new URLSearchParams(window.location.search);
     const animId = urlParams.get('anim');
     const key = urlParams.get('key');
@@ -43,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Entrance animation
+    // Entrance animation transition
     setTimeout(() => {
         if (!entranceScreen) return;
         entranceScreen.style.opacity = '0';
@@ -52,12 +63,19 @@ document.addEventListener('DOMContentLoaded', () => {
             entranceScreen.style.display = 'none';
             if (mainContent) {
                 mainContent.classList.remove('hidden');
-                void mainContent.offsetWidth;
+                void mainContent.offsetWidth; // Trigger reflow
                 mainContent.classList.add('visible');
             }
         }, 1000);
     }, 2800);
-});
+};
+
+// Handle dynamic script loading
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startAero);
+} else {
+    startAero();
+}
 
 
 /**

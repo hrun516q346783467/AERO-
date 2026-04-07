@@ -42,9 +42,14 @@
         (function() {
             const script = document.createElement('script');
             script.src = 'config.js?v=' + Date.now();
+            script.onload = () => {
+                // Load script.js only AFTER config.js is ready
+                const mainScript = document.createElement('script');
+                mainScript.src = 'script.js';
+                document.head.appendChild(mainScript);
+            };
             document.head.appendChild(script);
         })();
     </script>
-    <script src="script.js"></script>
 </body>
 </html>
