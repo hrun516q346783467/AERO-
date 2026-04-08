@@ -67,4 +67,25 @@ app.listen(port, '0.0.0.0', () => {
     console.log('🚀 AERO SUNUCUSU AKTİF!');
     console.log(`🌍 Port: ${port}`);
     console.log('================================================');
+
+    // === KEEP-ALIVE: Render'ın sunucuyu uyutmasını önle ===
+    // Her 10 dakikada bir kendi /status endpoint'ine ping atar
+    const RENDER_URL = process.env.RENDER_EXTERNAL_URL;
+
+    if (RENDER_URL) {
+        const http = require('https');
+
+        setInterval(() => {
+            const pingUrl = `${RENDER_URL}/status`;
+            http.get(pingUrl, (res) => {
+                console.log(`✅ Keep-alive ping gönderildi → ${pingUrl} [${res.statusCode}]`);
+            }).on('error', (err) => {
+                console.warn(`⚠️ Keep-alive ping başarısız: ${err.message}`);
+            });
+        }, 10 * 60 * 1000); // 10 dakika
+
+        console.log(`🔁 Keep-alive aktif → Her 10 dakikada ${RENDER_URL}/status ping atılacak`);
+    } else {
+        console.log('ℹ️ Keep-alive: RENDER_EXTERNAL_URL tanımlı değil (lokal ortam)');
+    }
 });
