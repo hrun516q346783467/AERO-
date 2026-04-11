@@ -254,10 +254,10 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('video', file);
             formData.append('adminKey', adminKey);
 
-            showToast('Video yükleniyor, lütfen bekleyin...', 'info');
+            const apiBase = window.location.protocol === 'file:' ? 'http://localhost:3000' : '';
 
             try {
-                const response = await fetch('/upload-video', {
+                const response = await fetch(apiBase + '/upload-video', {
                     method: 'POST',
                     body: formData
                 });
@@ -303,10 +303,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         applyAllBtn.onclick = async () => {
             const adminKey = document.getElementById('admin-key-input').value;
-            if (!adminKey) return showToast('Sunucu anahtarı gerekli!', 'danger');
+            const apiBase = window.location.protocol === 'file:' ? 'http://localhost:3000' : '';
 
             try {
-                const response = await fetch('/save', {
+                const response = await fetch(apiBase + '/save', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ config, adminKey })
