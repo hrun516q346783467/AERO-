@@ -82,6 +82,46 @@ const startAero = () => {
             }
         }, 1000);
     }, 2800);
+
+    // === MODAL ELEMENTS ===
+    const videoModal = document.getElementById('video-modal');
+    const modalVideo = document.getElementById('modal-video');
+    const modalTitle = document.getElementById('modal-title');
+    const modalWaLink = document.getElementById('modal-wa-link');
+    const modalClose = document.querySelector('.modal-close');
+    const modalBackdrop = document.querySelector('.modal-backdrop');
+
+    window.openModal = function(anim, waLink) {
+        modalTitle.innerText = anim.title;
+        modalWaLink.href = waLink;
+        
+        // Find video URL from HTML
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = anim.html;
+        const videoSrc = tempDiv.querySelector('video')?.getAttribute('src');
+        
+        if (videoSrc) {
+            modalVideo.src = videoSrc;
+            modalVideo.play();
+            videoModal.classList.remove('hidden');
+            void videoModal.offsetWidth; // trigger reflow
+            videoModal.classList.add('visible');
+            document.body.classList.add('modal-open');
+        }
+    }
+
+    window.closeModal = function() {
+        videoModal.classList.remove('visible');
+        document.body.classList.remove('modal-open');
+        setTimeout(() => {
+            videoModal.classList.add('hidden');
+            modalVideo.pause();
+            modalVideo.src = '';
+        }, 500);
+    }
+
+    if (modalClose) modalClose.onclick = window.closeModal;
+    if (modalBackdrop) modalBackdrop.onclick = window.closeModal;
 };
 
 // Handle dynamic script loading
@@ -171,17 +211,11 @@ function renderGallery(animations, waNumber, isAdmin) {
             </div>
         `;
 
-        // === FULLSCREEN ON CLICK ===
+        // === PREMIUM MODAL ON CLICK ===
         animContainer.onclick = () => {
             const video = shadow.querySelector('video');
             if (video) {
-                if (video.requestFullscreen) {
-                    video.requestFullscreen();
-                } else if (video.webkitRequestFullscreen) { /* Safari */
-                    video.webkitRequestFullscreen();
-                } else if (video.msRequestFullscreen) { /* IE11 */
-                    video.msRequestFullscreen();
-                }
+                window.openModal(anim, waLink);
             }
         };
     });
