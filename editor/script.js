@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Elements
     const animList = document.getElementById('anim-list');
     const addAnimBtn = document.getElementById('add-anim-btn');
+    const uploadVideoBtn = document.getElementById('upload-video-btn');
+    const videoUploadInput = document.getElementById('video-upload');
     const applyAllBtn = document.getElementById('save-all-btn');
     const exportFileBtn = document.getElementById('export-file-btn');
     const welcomeScreen = document.getElementById('welcome-screen');
@@ -28,15 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginError = document.getElementById('login-error');
     const editorContainer = document.querySelector('.editor-container');
 
-    const CORRECT_KEY = 'AERO VARNA';
+    const CORRECT_KEY = '126677';
 
     async function init() {
-        const sessionKey = sessionStorage.getItem('aero_session_active');
-        if (sessionKey === 'true') {
-            unlockEditor();
-        } else {
-            setupLogin();
-        }
+        // Şifre panelini geçici olarak devre dışı bıraktık
+        unlockEditor();
         setupEventListeners();
     }
 
@@ -179,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <!DOCTYPE html>
             <html>
             <head>
+                <base href="../">
                 <style>
                     body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: #020617; color: white; font-family: sans-serif; overflow: hidden; }
                     #shadow-host { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
@@ -234,6 +233,61 @@ document.addEventListener('DOMContentLoaded', () => {
             renderList();
             selectAnim(newId);
             saveToLocalStorage();
+        };
+
+        uploadVideoBtn.onclick = () => {
+            videoUploadInput.click();
+        };
+
+        videoUploadInput.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const adminKey = document.getElementById('admin-key-input').value;
+            if (!adminKey) {
+                showToast('Sunucu anahtarı gerekli!', 'danger');
+                videoUploadInput.value = '';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('video', file);
+            formData.append('adminKey', adminKey);
+
+            showToast('Video yükleniyor, lütfen bekleyin...', 'info');
+
+            try {
+                const response = await fetch('/upload-video', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('Video başarıyla yüklendi!', 'success');
+                    
+                    const newId = 'ANM' + (config.animations.length + 1);
+                    const htmlCode = `<div class="video-wrapper" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; border-radius: 12px; overflow: hidden;">\n    <video src="${result.url}" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>\n</div>`;
+                    
+                    const newAnim = { 
+                        id: newId, 
+                        title: 'Video ' + newId, 
+                        price: '0.00', 
+                        html: htmlCode, 
+                        css: '' 
+                    };
+                    config.animations.push(newAnim);
+                    renderList();
+                    selectAnim(newId);
+                    saveToLocalStorage();
+                } else {
+                    showToast(result.error || 'Yükleme başarısız!', 'danger');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Hata: Video yüklenemedi.', 'danger');
+            }
+            videoUploadInput.value = '';
         };
 
         deleteAnimBtn.onclick = () => {
