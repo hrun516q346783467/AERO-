@@ -144,11 +144,20 @@
     <script>
         // Cache-busting: sunucudan her zaman en güncel config.js'i yükle
         (function() {
+            const isFile = window.location.protocol === 'file:';
+            const version = isFile ? '' : '?v=' + Date.now();
+            
             const s = document.createElement('script');
-            s.src = '../config.js?v=' + Date.now();
+            s.src = '../config.js' + version;
             s.onload = function() {
                 const main = document.createElement('script');
-                main.src = 'script.js?v=' + Date.now();
+                main.src = 'script.js' + version;
+                document.head.appendChild(main);
+            };
+            s.onerror = function() {
+                console.error('config.js yuklenemedi, varsayilan ayarlar kullaniliyor.');
+                const main = document.createElement('script');
+                main.src = 'script.js' + version;
                 document.head.appendChild(main);
             };
             document.head.appendChild(s);

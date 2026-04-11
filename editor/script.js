@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    let config = window.AERO_CONFIG;
+    let config = window.AERO_CONFIG || { animations: [] };
     let currentAnimId = null;
 
     // Elements
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadFromLocalStorage() {
         // ÖNCE sunucu verisini (window.AERO_CONFIG) kullan — asla ezeriz
         // LocalStorage sadece sunucu erişilememişse veya kullanıcı değişiklik yapmışsa kullanılır
-        const serverConfig = window.AERO_CONFIG;
+        const serverConfig = window.AERO_CONFIG || { animations: [] };
         const backupRaw = localStorage.getItem('aero_editor_backup');
 
         if (!backupRaw) {
