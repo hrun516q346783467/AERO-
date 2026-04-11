@@ -76,7 +76,7 @@ const startAero = async () => {
     setTimeout(() => {
         if (!entranceScreen) return;
         entranceScreen.style.opacity = '0';
-        entranceScreen.style.visibility = 'hidden';
+        entranceScreen.style.transform = 'translateY(-100%)';
         setTimeout(() => {
             entranceScreen.style.display = 'none';
             if (mainContent) {
@@ -85,7 +85,7 @@ const startAero = async () => {
                 mainContent.classList.add('visible');
             }
         }, 1000);
-    }, 2800);
+    }, 4000); // 3s animation + 1s buffer
 
     if (modalClose) modalClose.onclick = window.closeModal;
     if (modalBackdrop) modalBackdrop.onclick = window.closeModal;
