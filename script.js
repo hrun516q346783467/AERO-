@@ -47,8 +47,6 @@ const startAero = async () => {
 
     // Apply site settings
     document.title = config.settings.siteTitle;
-    document.querySelector('.logo-animation').innerText = config.settings.entrance.logo;
-    document.querySelector('.subtitle-animation').innerText = config.settings.entrance.subtitle;
     document.getElementById('header-logo-text').innerText = config.settings.headerLogo;
 
     // Render gallery

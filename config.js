@@ -5,7 +5,7 @@ window.AERO_CONFIG = {
         "whatsappNumber": "905387728696",
         "entrance": {
             "logo": "AERO",
-            "subtitle": "Creative Animations"
+            "subtitle": "HARUN VARNA"
         }
     },
     "animations": [
