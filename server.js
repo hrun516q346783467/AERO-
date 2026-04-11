@@ -13,8 +13,24 @@ const ADMIN_KEY = '126677';
 
 // === IN-MEMORY CONFIG (Render'da filesystem yazılamaz) ===
 // Başlangıçta config.js'deki statik değerler kullanılır.
-// Editor'dan kaydedilince bu memory'de tutulur.
 let inMemoryConfig = null;
+
+// Sunucu açıldığında config.js'yi oku ve memory'yi doldur
+try {
+    const configPath = path.join(__dirname, 'config.js');
+    if (fs.existsSync(configPath)) {
+        const fileContent = fs.readFileSync(configPath, 'utf8');
+        // Hem "window.AERO_CONFIG =" hem de "const AERO_CONFIG =" durumlarını destekle
+        const jsonStr = fileContent
+            .replace(/^(window|const)\.AERO_CONFIG\s*=\s*/, '')
+            .replace(/;$/, '')
+            .trim();
+        inMemoryConfig = JSON.parse(jsonStr);
+        console.log("[OK] Config.js initialized into memory");
+    }
+} catch (e) {
+    console.warn("[WARN] Could not initialize memory from config.js:", e.message);
+}
 
 // === MULTER SETUP ===
 const storage = multer.diskStorage({
@@ -32,8 +48,13 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-app.use(cors());
-app.use(express.json({ limit: '10mb' }));
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Serve Static Files (Viewer & Editor)
 app.use(express.static(path.join(__dirname)));
@@ -98,13 +119,14 @@ app.post('/save', (req, res) => {
         console.log('--- Config.js dosyası fiziksel olarak güncellendi ---');
 
         // 3. GitHub'a otomatik Push yap (Arka planda çalışır)
-        const gitCmd = 'git add config.js && git commit -m "auto: sync from editor" && git push origin main';
+        // Artık sadece config.js değil, yeni yüklenen videoları da kapsıyor (git add .)
+        const gitCmd = 'git add . && git commit -m "auto: sync from editor (config + assets)" && git push origin main';
         exec(gitCmd, { cwd: __dirname }, (error, stdout, stderr) => {
             if (error) {
                 console.error(`Git Push Hatası: ${error.message}`);
                 return;
             }
-            console.log('--- GitHub Otomatik Senkronizasyonu Başarılı ---');
+            console.log('--- GitHub Otomatik Senkronizasyonu Başarılı (Videolar Dahil) ---');
         });
 
         res.json({

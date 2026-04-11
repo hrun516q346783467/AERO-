@@ -5,23 +5,37 @@ window.AERO_CONFIG = {
         "whatsappNumber": "905387728696",
         "entrance": {
             "logo": "AERO",
-            "subtitle": "HARUN VARNA"
+            "subtitle": "Creative Animations"
         }
     },
     "animations": [
         {
-            "id": "ANM1",
-            "title": "Yazılana bürünen yuvarlak tozlar",
-            "html": "<div class=\"video-wrapper\" style=\"width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; border-radius: 12px; overflow: hidden;\">\n    <video src=\"assets/videos/video-1775914356285-31124429.mp4\" autoplay loop muted playsinline style=\"width: 100%; height: 100%; object-fit: contain;\"></video>\n</div>",
-            "css": "",
-            "price": "100.20"
+            "id": "ANM8",
+            "title": "DİANA VARNA",
+            "price": "12,56",
+            "html": "<div class=\"video-wrapper\" style=\"width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; border-radius: 12px; overflow: hidden;\">\n    <video src=\"assets/videos/video-1775914356285-31124429.mp4\" autoplay loop muted playsinline style=\"width: 100%; height: 100%; object-fit: cover;\"></video>\n</div>",
+            "css": ""
         },
         {
             "id": "ANM2",
-            "title": "Yazılana bürünen pembe kalp",
-            "html": "<div class=\"video-wrapper\" style=\"width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; border-radius: 12px; overflow: hidden;\">\n    <video src=\"assets/videos/video-1775914668599-647317769.mp4\" autoplay loop muted playsinline style=\"width: 100%; height: 100%; object-fit: contain;\"></video>\n</div>",
-            "css": "",
-            "price": "100.52"
+            "title": "3D Particle",
+            "price": "4,48",
+            "html": "<div class=\"video-wrapper\" style=\"width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; border-radius: 12px; overflow: hidden;\">\n    <video src=\"assets/videos/video-1775914668599-647317769.mp4\" autoplay loop muted playsinline style=\"width: 100%; height: 100%; object-fit: cover;\"></video>\n</div>",
+            "css": ""
+        },
+        {
+            "id": "",
+            "title": "Video ANM3",
+            "price": "4,48",
+            "html": "<div class=\"video-wrapper\" style=\"width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; border-radius: 12px; overflow: hidden;\">\n    <video src=\"assets/videos/video-1775926888689-311767450.mp4\" autoplay loop muted playsinline style=\"width: 100%; height: 100%; object-fit: contain;\"></video>\n</div>",
+            "css": ""
+        },
+        {
+            "id": "ANM",
+            "title": "Quantum Galaxy",
+            "price": "4,48",
+            "html": "<div class=\"video-wrapper\" style=\"width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; border-radius: 12px; overflow: hidden;\">\n    <video src=\"assets/videos/video-1775927229470-119366402.mp4\" autoplay loop muted playsinline style=\"width: 100%; height: 100%; object-fit: contain;\"></video>\n</div>",
+            "css": ""
         }
     ]
 };

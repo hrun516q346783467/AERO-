@@ -291,13 +291,19 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         deleteAnimBtn.onclick = () => {
-            if (confirm('Silmek istediğine emin misin?')) {
+            if (confirm('Bu animasyonu silmek istediğine emin misin? Bu işlem geri alınamaz.')) {
                 config.animations = config.animations.filter(a => a.id !== currentAnimId);
                 currentAnimId = null;
+                
+                // UI Güncelle
                 editView.classList.add('hidden');
                 welcomeScreen.classList.remove('hidden');
                 renderList();
+                
+                // Kaydet
                 saveToLocalStorage();
+                
+                showToast('Öğe silindi. Değişikliklerin canlı sitede görünmesi için "Buluta Kaydet" butonuna basmayı UNUTMAYIN!', 'warning');
             }
         };
 
@@ -324,18 +330,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const [localResult, liveResult] = await Promise.all([localP, liveP]);
 
-                if (localResult.success || liveResult.success) {
-                    showToast('Anlık Senkronizasyon Başarılı!', 'success');
+                if (localResult.success && liveResult.success) {
+                    showToast('✅ Sistemler (Yerel + Bulut) senkronize edildi!', 'success');
+                } else if (liveResult.success) {
+                    showToast('☁️ Sadece Bulut güncellendi (Yerel hata)!', 'warning');
+                } else if (localResult.success) {
+                    showToast('💻 Sadece Yerel güncellendi (Bulut hatası)!', 'warning');
                 } else {
-                    showToast('Hata: ' + (localResult.error || liveResult.error), 'danger');
+                    showToast('❌ Senkronizasyon başarısız: ' + (liveResult.error || 'Ağ hatası'), 'danger');
                 }
             } catch (err) {
                 console.error('Sync error:', err);
                 showToast('Ağ hatası: Sunuculara ulaşılamadı.', 'danger');
-            }
-        };
-            } catch (err) {
-                showToast('Hata: Sunucuya ulaşılamadı.', 'danger');
             }
         };
 

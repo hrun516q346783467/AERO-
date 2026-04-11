@@ -1,28 +1,26 @@
 const startAero = async () => {
     // 1. API'den en güncel (anlık) veriyi çekmeyi dene
     let config = window.AERO_CONFIG;
+    let isCloudData = false;
     try {
-        const res = await fetch('/config-data');
+        const res = await fetch('/config-data?t=' + Date.now());
         const apiData = await res.json();
-        if (apiData.success && apiData.config) {
-            config = apiData.config;
-            console.log('--- Veriler sunucu hafızasından (anlık) yüklendi ---');
+        
+        if (apiData && (apiData.animations || apiData.config)) {
+            config = apiData.config || apiData;
+            isCloudData = true;
+            console.log('✅ Bulut verisi aktif.');
         }
-    } catch (e) { /* API yoksa config.js ile devam et */ }
-    
-    // LocalStorage'dan yedek al (sadece sunucu erişilemezse veya yedek daha günceldir)
-    const backupRaw = localStorage.getItem('aero_editor_backup');
-    if (backupRaw) {
-        try {
-            const backup = JSON.parse(backupRaw);
-            if (backup && backup.data) {
-                // Sunucu verisi yoksa veya yedek daha güncelse kullan
-                if (!config || (backup.data.animations.length > config.animations.length)) {
-                    config = backup.data;
-                }
-            }
-        } catch(e) { /* Bozuk yedek */ }
+    } catch (e) {
+        console.warn("⚠️ Sunucu verisi alınamadı, yerel config.js kullanılacak.");
     }
+
+    // Live Badge ekle (Debug için)
+    const badge = document.createElement('div');
+    badge.id = 'live-status-badge';
+    badge.innerHTML = isCloudData ? '● CLOUD SYNC ACTIVE' : '○ STATIC VERSION';
+    badge.style = `position: fixed; bottom: 20px; left: 20px; font-family: monospace; font-size: 10px; color: ${isCloudData ? '#10b981' : '#64748b'}; z-index: 10000; letter-spacing: 2px; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 20px; pointer-events: none;`;
+    document.body.appendChild(badge);
 
     if (!config) {
         // Retry once after 100ms if config.js is still loading
