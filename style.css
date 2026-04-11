@@ -168,12 +168,12 @@ body {
 }
 
 .subtitle-animation {
-    font-size: 0.65rem;
-    font-weight: 400;
-    letter-spacing: 1.2em;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 1em;
     color: #38bdf8;
     margin-top: 2rem;
-    padding-left: 1.2em;
+    padding-left: 1em;
     opacity: 0;
     text-transform: uppercase;
     animation: fadeInUltra 2s ease 2s forwards;
