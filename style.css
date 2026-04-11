@@ -51,53 +51,94 @@ body {
     align-items: center;
     z-index: 9999;
     overflow: hidden;
-    transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1), opacity 1s;
+    transition: clip-path 1.5s cubic-bezier(0.77, 0, 0.175, 1), opacity 1s;
+    clip-path: circle(150% at 50% 50%);
 }
 
 .entrance-bg {
     position: absolute;
-    width: 150%;
-    height: 150%;
-    background: radial-gradient(circle at 50% 50%, #1e293b 0%, #020617 100%);
-    animation: rotateBg 15s linear infinite;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #020617;
     z-index: -1;
-    opacity: 0.6;
 }
 
-@keyframes rotateBg {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.3;
+    animation: orbMove 20s infinite alternate ease-in-out;
+}
+
+.orb-1 {
+    width: 600px;
+    height: 600px;
+    background: #1e293b;
+    top: -10%;
+    left: -10%;
+    animation-duration: 25s;
+}
+
+.orb-2 {
+    width: 500px;
+    height: 500px;
+    background: #0f172a;
+    bottom: -5%;
+    right: -10%;
+    animation-duration: 18s;
+}
+
+.orb-3 {
+    width: 400px;
+    height: 400px;
+    background: #334155;
+    top: 30%;
+    left: 30%;
+    animation-duration: 22s;
+}
+
+@keyframes orbMove {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(150px, 100px) scale(1.3); }
 }
 
 .logo-wrapper {
     position: relative;
-    padding: 1rem 2rem;
+    padding: 1rem 3rem;
 }
 
 .logo-animation {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.2rem;
     font-size: clamp(4rem, 12vw, 7rem);
-    font-weight: 800;
-    letter-spacing: 0.1em;
+    font-weight: 300;
     color: #fff;
     margin: 0;
+    animation: kerningExpand 3s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+@keyframes kerningExpand {
+    from { letter-spacing: -0.2em; font-weight: 300; }
+    to { letter-spacing: 0.15em; font-weight: 800; }
 }
 
 .char {
     display: inline-block;
     opacity: 0;
-    transform: translateY(30px) scale(0.8);
-    filter: blur(10px);
-    animation: charReveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    transform: translateY(40px) scale(0.9);
+    filter: blur(20px);
+    animation: charRevealUltra 1.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
-.char:nth-child(1) { animation-delay: 0.2s; }
-.char:nth-child(2) { animation-delay: 0.35s; }
-.char:nth-child(3) { animation-delay: 0.5s; }
-.char:nth-child(4) { animation-delay: 0.65s; }
+.char:nth-child(1) { animation-delay: 0.4s; }
+.char:nth-child(2) { animation-delay: 0.55s; }
+.char:nth-child(3) { animation-delay: 0.7s; }
+.char:nth-child(4) { animation-delay: 0.85s; }
 
-@keyframes charReveal {
+@keyframes charRevealUltra {
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -105,41 +146,61 @@ body {
     }
 }
 
+.shimmer-effect {
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to right,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.08) 50%,
+        rgba(255,255,255,0) 100%
+    );
+    transform: skewX(-20deg);
+    animation: shimmerWipe 2.5s ease 2s forwards;
+    pointer-events: none;
+}
+
+@keyframes shimmerWipe {
+    to { left: 150%; }
+}
+
 .subtitle-animation {
-    font-size: 0.7rem;
-    font-weight: 300;
-    letter-spacing: 0.8em;
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 1.2em;
     color: #38bdf8;
-    margin-top: 1.5rem;
-    padding-left: 0.8em;
+    margin-top: 2rem;
+    padding-left: 1.2em;
     opacity: 0;
-    animation: fadeIn 1s ease 1.5s forwards;
     text-transform: uppercase;
+    animation: fadeInUltra 2s ease 2s forwards;
 }
 
 .loader-container {
     position: absolute;
-    bottom: 10%;
-    width: 200px;
-    height: 2px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
+    bottom: 8%;
+    width: 240px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.03);
     overflow: hidden;
 }
 
 .loader-bar {
     width: 0%;
     height: 100%;
-    background: linear-gradient(90deg, #38bdf8, #818cf8);
-    box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
-    animation: loaderProgress 3s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+    background: #38bdf8;
+    box-shadow: 0 0 15px #38bdf8;
+    animation: loaderProgress 4s cubic-bezier(0.65, 0, 0.35, 1) forwards;
 }
 
 @keyframes loaderProgress {
     to { width: 100%; }
 }
 
-@keyframes fadeIn {
+@keyframes fadeInUltra {
     to { opacity: 1; }
 }
 

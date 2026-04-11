@@ -76,7 +76,7 @@ const startAero = async () => {
     setTimeout(() => {
         if (!entranceScreen) return;
         entranceScreen.style.opacity = '0';
-        entranceScreen.style.transform = 'translateY(-100%)';
+        entranceScreen.style.clipPath = 'circle(0% at 50% 50%)';
         setTimeout(() => {
             entranceScreen.style.display = 'none';
             if (mainContent) {
@@ -84,8 +84,8 @@ const startAero = async () => {
                 void mainContent.offsetWidth; // Trigger reflow
                 mainContent.classList.add('visible');
             }
-        }, 1000);
-    }, 4000); // 3s animation + 1s buffer
+        }, 1500);
+    }, 5000); // 4s loader + 1s buffer for SOTA effect
 
     if (modalClose) modalClose.onclick = window.closeModal;
     if (modalBackdrop) modalBackdrop.onclick = window.closeModal;
