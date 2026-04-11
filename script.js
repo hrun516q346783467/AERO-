@@ -83,43 +83,6 @@ const startAero = () => {
         }, 1000);
     }, 2800);
 
-    // === MODAL ELEMENTS ===
-    const videoModal = document.getElementById('video-modal');
-    const modalVideo = document.getElementById('modal-video');
-    const modalTitle = document.getElementById('modal-title');
-    const modalWaLink = document.getElementById('modal-wa-link');
-    const modalClose = document.querySelector('.modal-close');
-    const modalBackdrop = document.querySelector('.modal-backdrop');
-
-    window.openModal = function(anim, waLink) {
-        modalTitle.innerText = anim.title;
-        modalWaLink.href = waLink;
-        
-        // Find video URL from HTML
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = anim.html;
-        const videoSrc = tempDiv.querySelector('video')?.getAttribute('src');
-        
-        if (videoSrc) {
-            modalVideo.src = videoSrc;
-            modalVideo.play();
-            videoModal.classList.remove('hidden');
-            void videoModal.offsetWidth; // trigger reflow
-            videoModal.classList.add('visible');
-            document.body.classList.add('modal-open');
-        }
-    }
-
-    window.closeModal = function() {
-        videoModal.classList.remove('visible');
-        document.body.classList.remove('modal-open');
-        setTimeout(() => {
-            videoModal.classList.add('hidden');
-            modalVideo.pause();
-            modalVideo.src = '';
-        }, 500);
-    }
-
     if (modalClose) modalClose.onclick = window.closeModal;
     if (modalBackdrop) modalBackdrop.onclick = window.closeModal;
 };
@@ -183,25 +146,7 @@ function renderGallery(animations, waNumber, isAdmin) {
                     align-items: center;
                     width: 100%;
                     height: 100%;
-                    cursor: pointer;
                 }
-                :host::after {
-                    content: '\f422';
-                    font-family: 'Font Awesome 6 Free';
-                    font-weight: 900;
-                    position: absolute;
-                    top: 15px;
-                    right: 15px;
-                    background: rgba(0,0,0,0.5);
-                    color: white;
-                    padding: 8px;
-                    border-radius: 50%;
-                    opacity: 0;
-                    transition: opacity 0.3s;
-                    font-size: 0.8rem;
-                    pointer-events: none;
-                }
-                :host:hover::after { opacity: 1; }
                 * { box-sizing: border-box; margin: 0; padding: 0; }
                 ${builtInCss}
                 ${anim.css || ''}
@@ -210,14 +155,6 @@ function renderGallery(animations, waNumber, isAdmin) {
                 ${anim.html}
             </div>
         `;
-
-        // === PREMIUM MODAL ON CLICK ===
-        animContainer.onclick = () => {
-            const video = shadow.querySelector('video');
-            if (video) {
-                window.openModal(anim, waLink);
-            }
-        };
     });
 }
 

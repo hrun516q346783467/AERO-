@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     showToast('Video başarıyla yüklendi!', 'success');
                     
                     const newId = 'ANM' + (config.animations.length + 1);
-                    const htmlCode = `<div class="video-wrapper" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; border-radius: 12px; overflow: hidden;">\n    <video src="${result.url}" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>\n</div>`;
+                    const htmlCode = `<div class="video-wrapper" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; border-radius: 12px; overflow: hidden;">\n    <video src="${result.url}" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: contain;"></video>\n</div>`;
                     
                     const newAnim = { 
                         id: newId, 
