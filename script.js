@@ -132,13 +132,9 @@ function renderGallery(animations, waNumber, isAdmin) {
         container.appendChild(card);
 
         // === SHADOW DOM ISOLATION ===
-        // Create a shadow root — CSS inside here CANNOT affect anything outside
         const shadow = animContainer.attachShadow({ mode: 'open' });
-
-        // Get built-in CSS for default animations (ANM1-ANM5)
         const builtInCss = getBuiltInCss(anim.id);
 
-        // Build isolated content
         shadow.innerHTML = `
             <style>
                 :host {
@@ -147,7 +143,25 @@ function renderGallery(animations, waNumber, isAdmin) {
                     align-items: center;
                     width: 100%;
                     height: 100%;
+                    cursor: pointer;
                 }
+                :host::after {
+                    content: '\f422';
+                    font-family: 'Font Awesome 6 Free';
+                    font-weight: 900;
+                    position: absolute;
+                    top: 15px;
+                    right: 15px;
+                    background: rgba(0,0,0,0.5);
+                    color: white;
+                    padding: 8px;
+                    border-radius: 50%;
+                    opacity: 0;
+                    transition: opacity 0.3s;
+                    font-size: 0.8rem;
+                    pointer-events: none;
+                }
+                :host:hover::after { opacity: 1; }
                 * { box-sizing: border-box; margin: 0; padding: 0; }
                 ${builtInCss}
                 ${anim.css || ''}
@@ -156,6 +170,20 @@ function renderGallery(animations, waNumber, isAdmin) {
                 ${anim.html}
             </div>
         `;
+
+        // === FULLSCREEN ON CLICK ===
+        animContainer.onclick = () => {
+            const video = shadow.querySelector('video');
+            if (video) {
+                if (video.requestFullscreen) {
+                    video.requestFullscreen();
+                } else if (video.webkitRequestFullscreen) { /* Safari */
+                    video.webkitRequestFullscreen();
+                } else if (video.msRequestFullscreen) { /* IE11 */
+                    video.msRequestFullscreen();
+                }
+            }
+        };
     });
 }
 
