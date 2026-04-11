@@ -1,6 +1,14 @@
-const startAero = () => {
-    // Sunucu verisini her zaman önce al
+const startAero = async () => {
+    // 1. API'den en güncel (anlık) veriyi çekmeyi dene
     let config = window.AERO_CONFIG;
+    try {
+        const res = await fetch('/config-data');
+        const apiData = await res.json();
+        if (apiData.success && apiData.config) {
+            config = apiData.config;
+            console.log('--- Veriler sunucu hafızasından (anlık) yüklendi ---');
+        }
+    } catch (e) { /* API yoksa config.js ile devam et */ }
     
     // LocalStorage'dan yedek al (sadece sunucu erişilemezse veya yedek daha günceldir)
     const backupRaw = localStorage.getItem('aero_editor_backup');
@@ -8,16 +16,12 @@ const startAero = () => {
         try {
             const backup = JSON.parse(backupRaw);
             if (backup && backup.data) {
-                // Sunucu verisi yoksa yedeği kullan
-                if (!config) {
-                    config = backup.data;
-                }
-                // Sunucu verisi varsa ama yedek daha fazla animasyon içeriyorsa (kullanıcı eklemişse) yedeği kullan
-                else if (backup.data.animations.length > config.animations.length) {
+                // Sunucu verisi yoksa veya yedek daha güncelse kullan
+                if (!config || (backup.data.animations.length > config.animations.length)) {
                     config = backup.data;
                 }
             }
-        } catch(e) { /* Bozuk yedek, sunucu verisini kullan */ }
+        } catch(e) { /* Bozuk yedek */ }
     }
 
     if (!config) {

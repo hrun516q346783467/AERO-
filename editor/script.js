@@ -303,21 +303,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
         applyAllBtn.onclick = async () => {
             const adminKey = document.getElementById('admin-key-input').value;
-            const apiBase = window.location.protocol === 'file:' ? 'http://localhost:3000' : '';
+            const localApi = 'http://localhost:3000/save';
+            const liveApi = 'https://aero-tf1q.onrender.com/save';
+
+            showToast('Senkronizasyon başlatıldı...', 'info');
 
             try {
-                const response = await fetch(apiBase + '/save', {
+                // Her iki sunucuya da aynı anda gönder
+                const localP = fetch(localApi, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ config, adminKey })
-                });
+                }).then(r => r.json());
 
-                const result = await response.json();
-                if (result.success) {
-                    showToast('Bulut Senkronizasyonu Başarılı!', 'success');
+                const liveP = fetch(liveApi, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ config, adminKey })
+                }).then(r => r.json());
+
+                const [localResult, liveResult] = await Promise.all([localP, liveP]);
+
+                if (localResult.success || liveResult.success) {
+                    showToast('Anlık Senkronizasyon Başarılı!', 'success');
                 } else {
-                    showToast(result.error || 'Kaydetme hatası!', 'danger');
+                    showToast('Hata: ' + (localResult.error || liveResult.error), 'danger');
                 }
+            } catch (err) {
+                console.error('Sync error:', err);
+                showToast('Ağ hatası: Sunuculara ulaşılamadı.', 'danger');
+            }
+        };
             } catch (err) {
                 showToast('Hata: Sunucuya ulaşılamadı.', 'danger');
             }

@@ -1,8 +1,5 @@
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
-const multer = require('multer');
 const fs = require('fs');
+const { exec } = require('child_process');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -72,7 +69,7 @@ app.get('/config-data', (req, res) => {
     }
 });
 
-// Save endpoint - dosyaya DEĞİL, memory'e kaydeder
+// Save endpoint - Hem memory'e hem de FİZİKSEL DOSYAYA kaydeder
 app.post('/save', (req, res) => {
     try {
         const { config, adminKey } = req.body;
@@ -83,16 +80,32 @@ app.post('/save', (req, res) => {
         }
 
         if (!config) {
-            return res.status(400).json({ error: 'Config data missing' });
+            return res.status(400).json({ error: 'Config verisi eksik!' });
         }
 
-        // Memory'e kaydet
+        // 1. Memory'e kaydet (Hızlı erişim için)
         inMemoryConfig = config;
-        console.log('--- Config memory\'e kaydedildi ---');
+
+        // 2. Fiziksel config.js dosyasına yaz (GitHub'a push yapabilmek için)
+        const configFilePath = path.join(__dirname, 'config.js');
+        const fileContent = `window.AERO_CONFIG = ${JSON.stringify(config, null, 4)};`;
+        fs.writeFileSync(configFilePath, fileContent, 'utf8');
+
+        console.log('--- Config.js dosyası fiziksel olarak güncellendi ---');
+
+        // 3. GitHub'a otomatik Push yap (Arka planda çalışır)
+        const gitCmd = 'git add config.js && git commit -m "auto: sync from editor" && git push origin main';
+        exec(gitCmd, { cwd: __dirname }, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Git Push Hatası: ${error.message}`);
+                return;
+            }
+            console.log('--- GitHub Otomatik Senkronizasyonu Başarılı ---');
+        });
 
         res.json({
             success: true,
-            message: 'Ayarlar kaydedildi! (Not: Sunucu restart edilirse sıfırlanır. GitHub\'a push yapın.)'
+            message: 'Ayarlar anlık olarak kaydedildi ve GitHub senkronizasyonu başlatıldı!'
         });
     } catch (err) {
         console.error('Save error:', err);
