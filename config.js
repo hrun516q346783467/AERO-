@@ -11,7 +11,7 @@ window.AERO_CONFIG = {
     "animations": [
         {
             "id": "ANM8",
-            "title": "DİANA VARNA",
+            "title": "Süretli Bitişme Sistemi",
             "price": "12,56",
             "html": "<div class=\"video-wrapper\" style=\"width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; border-radius: 12px; overflow: hidden;\">\n    <video src=\"assets/videos/video-1775914356285-31124429.mp4\" autoplay loop muted playsinline style=\"width: 100%; height: 100%; object-fit: cover;\"></video>\n</div>",
             "css": ""
