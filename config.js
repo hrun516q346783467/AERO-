@@ -36,6 +36,13 @@ window.AERO_CONFIG = {
             "price": "4,48",
             "html": "<div class=\"video-wrapper\" style=\"width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; border-radius: 12px; overflow: hidden;\">\n    <video src=\"assets/videos/video-1775927229470-119366402.mp4\" autoplay loop muted playsinline style=\"width: 100%; height: 100%; object-fit: contain;\"></video>\n</div>",
             "css": ""
+        },
+        {
+            "id": "ANM5",
+            "title": "Neon Eller Piano",
+            "price": "0.00",
+            "html": "<div class=\"video-wrapper\" style=\"width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; border-radius: 12px; overflow: hidden;\">\n    <video src=\"assets/videos/video-1775943572574-7519217.mp4\" autoplay loop muted playsinline style=\"width: 100%; height: 100%; object-fit: contain;\"></video>\n</div>",
+            "css": ""
         }
     ]
 };
